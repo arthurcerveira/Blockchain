@@ -2,6 +2,8 @@ import hashlib
 import json
 from time import time
 
+VERIFY_KEY = "0000"
+
 
 class BlockChain(object):
     def __init__(self):
@@ -22,6 +24,20 @@ class BlockChain(object):
 
     def last_block(self):
         return self.chain.pop()
+
+    def proof_of_work(self, last_proof):
+        proof = 0
+        while self.valid_proof(last_proof, proof) is False:
+            proof += 1
+
+        return proof
+
+    @staticmethod
+    def valid_proof(last_proof, proof):
+        guess = f'{ last_proof }{ proof }'.encode()
+        guess_hash = hashlib.sha256(guess).hexdigest()
+
+        return True if VERIFY_KEY in guess_hash else False
 
 
 class Block(object):
