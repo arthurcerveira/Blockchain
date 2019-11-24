@@ -1,7 +1,7 @@
-from blockchain import BlockChain
+from blockchain import BlockChain, Block
 from uuid import uuid4
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 bc = BlockChain()
 app = Flask(__name__)
@@ -11,12 +11,47 @@ node_identifier = str(uuid4()).replace('-', '')
 
 @app.route('/mine', methods=['GET'])
 def mine():
-    pass
+    # Brute force the next proof
+    last_block = bc.last_block()
+    last_proof = last_block.proof
+    proof = bc.proof_of_work(last_proof)
+
+    # Perform a new transaction with the proof
+    transaction = bc.new_transaction(
+        sender='0',
+        recipient=node_identifier,
+        amount=1
+    )
+
+    # Generate a new block
+    previous_hash = last_block.hash()
+    index = last_block.index + 1
+    block = Block(index, transaction, proof, previous_hash)
+
+    response = {
+        'message': "New Block Forged",
+        'index': block.index,
+        'transaction': block.transaction,
+        'proof': block.proof,
+        'previous_hash': block.previous_hash
+    }
+
+    return jsonify(response), 200
 
 
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
-    pass
+    values = request.get_json()
+
+    required = ['sender', 'recipient', 'amount']
+    if not all(k in values for k in required):
+        return 'Missing values', 400
+
+    transaction = bc.new_transaction(values['sender'],
+                                     values['recipient'],
+                                     values['amount'])
+
+    return jsonify(transaction), 201
 
 
 @app.route('/chain', methods=['GET'])
@@ -27,3 +62,7 @@ def full_chain():
     }
 
     return jsonify(response), 200
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
