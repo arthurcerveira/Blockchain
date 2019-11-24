@@ -18,9 +18,8 @@ class BlockChain(object):
         }
 
         self.current_transactions.append(transaction)
-        index = self.last_block().index + 1
 
-        return index
+        return transaction
 
     def last_block(self):
         return self.chain.pop()
