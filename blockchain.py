@@ -13,6 +13,18 @@ class BlockChain(object):
         self.current_transactions = []
         self.nodes = set()
 
+        self.new_block(previous_hash='1', proof=100)
+
+    def new_block(self, proof, previous_hash):
+        index = len(self.chain) + 1
+
+        block = Block(index, self.current_transactions, proof, previous_hash)
+
+        self.current_transactions = []
+        self.chain.append(block)
+
+        return block
+
     def new_transaction(self, sender, recipient, amount):
         transaction = {
             'sender': sender,
@@ -30,7 +42,7 @@ class BlockChain(object):
         self.nodes.add(url.netloc)
 
     def last_block(self):
-        return self.chain.pop()
+        return self.chain[-1]
 
     def proof_of_work(self, last_proof):
         proof = 0
@@ -92,15 +104,18 @@ class BlockChain(object):
 
 
 class Block(object):
-    def __init__(self, index, transaction, proof, previous_hash=None):
+    def __init__(self, index, transactions, proof, previous_hash=None):
         self.index = index
         self.timestamp = time()
-        self.transaction = transaction
+        self.transactions = transactions
         self.proof = proof
         self.previous_hash = previous_hash
 
     def hash(self):
-        block_string = json.dumps(self, sort_keys=True).encode()
+        block_dict = self.__dict__
+        print(block_dict)
+
+        block_string = json.dumps(block_dict, sort_keys=True).encode()
         block_hash = hashlib.sha256(block_string).hexdigest()
 
         return block_hash

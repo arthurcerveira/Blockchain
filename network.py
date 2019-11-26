@@ -17,7 +17,7 @@ def mine():
     proof = bc.proof_of_work(last_proof)
 
     # Perform a new transaction with the proof
-    transaction = bc.new_transaction(
+    bc.new_transaction(
         sender='0',
         recipient=node_identifier,
         amount=1
@@ -25,13 +25,12 @@ def mine():
 
     # Generate a new block
     previous_hash = last_block.hash()
-    index = last_block.index + 1
-    block = Block(index, transaction, proof, previous_hash)
+    block = bc.new_block(proof, previous_hash)
 
     response = {
         'message': "New Block Forged",
         'index': block.index,
-        'transaction': block.transaction,
+        'transaction': block.transactions,
         'proof': block.proof,
         'previous_hash': block.previous_hash
     }
@@ -56,8 +55,9 @@ def new_transaction():
 
 @app.route('/chain', methods=['GET'])
 def full_chain():
+    chain = tuple(map(lambda x: x.__dict__, tuple(bc.chain)))
     response = {
-        'chain': bc.chain,
+        'chain': chain,
         'lenght': len(bc.chain)
     }
 
