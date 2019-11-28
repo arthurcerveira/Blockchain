@@ -1,5 +1,6 @@
-from blockchain import BlockChain, Block
+from blockchain import BlockChain
 from uuid import uuid4
+import sys
 
 from flask import Flask, jsonify, request
 
@@ -92,13 +93,16 @@ def consensus():
     else:
         message = 'Our chain is authoritative'
 
+    chain = tuple(map(lambda x: x.__dict__, tuple(bc.chain)))
+
     response = {
         'message': message,
-        'chain': bc.chain
+        'chain': chain
     }
 
     return jsonify(response), 200
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    port = int(sys.argv[1])
+    app.run(host='0.0.0.0', port=port)
