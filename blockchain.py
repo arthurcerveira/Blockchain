@@ -13,9 +13,10 @@ class BlockChain(object):
         self.current_transactions = []
         self.nodes = set()
 
-        self.new_block(previous_hash='1', proof=100)
+        # Genesis block
+        self.new_block()
 
-    def new_block(self, proof, previous_hash):
+    def new_block(self, proof=100, previous_hash='1'):
         index = len(self.chain) + 1
 
         block = Block(index, self.current_transactions, proof, previous_hash)
@@ -59,14 +60,16 @@ class BlockChain(object):
         return True if VERIFY_KEY in guess_hash else False
 
     def valid_chain(self, chain):
-        last_block = chain[0]
-        current_index = 1
+        first_block = True
+        last_block = None
 
-        while current_index < len(chain):
-            block = chain[current_index]
-            print(f'{ last_block }')
-            print(f'{ block }')
-            print("\n---------------\n")
+        for block_dict in chain:
+            if first_block is True:
+                last_block = self.dict_to_block(block_dict)
+                first_block = False
+                continue
+
+            block = self.dict_to_block(block_dict)
 
             if block.previous_hash != last_block.hash():
                 return False
@@ -75,7 +78,6 @@ class BlockChain(object):
                 return False
 
             last_block = block
-            current_index += 1
 
         return True
 
@@ -97,14 +99,29 @@ class BlockChain(object):
                     new_chain = chain
 
         if new_chain:
+            new_chain = list(map(lambda x: self.dict_to_block(x), new_chain))
             self.chain = new_chain
             return True
 
         return False
 
+    @staticmethod
+    def hash_block(block):
+        block_string = json.dumps(block, sort_keys=True).encode()
+        block_hash = hashlib.sha256(block_string).hexdigest()
+
+        return block_hash
+
+    @staticmethod
+    def dict_to_block(dictionary):
+        return Block(dictionary["index"],
+                     dictionary["transactions"],
+                     dictionary["proof"],
+                     dictionary["previous_hash"])
+
 
 class Block(object):
-    def __init__(self, index, transactions, proof, previous_hash=None):
+    def __init__(self, index=0, transactions=None, proof=100, previous_hash='1'):
         self.index = index
         self.timestamp = time()
         self.transactions = transactions
@@ -113,7 +130,6 @@ class Block(object):
 
     def hash(self):
         block_dict = self.__dict__
-        print(block_dict)
 
         block_string = json.dumps(block_dict, sort_keys=True).encode()
         block_hash = hashlib.sha256(block_string).hexdigest()
