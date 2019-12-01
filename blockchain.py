@@ -60,24 +60,22 @@ class BlockChain(object):
         return True if VERIFY_KEY in guess_hash else False
 
     def valid_chain(self, chain):
-        first_block = True
-        last_block = None
+        last_block = chain[0]
+        current_index = 1
 
-        for block_dict in chain:
-            if first_block is True:
-                last_block = self.dict_to_block(block_dict)
-                first_block = False
-                continue
+        while current_index < len(chain):
+            block = chain[current_index]
 
-            block = self.dict_to_block(block_dict)
-
-            if block.previous_hash != last_block.hash():
+            # Check that the hash of the block is correct
+            if block['previous_hash'] != self.hash_block(last_block):
                 return False
 
-            if not self.valid_proof(last_block.proof, block.proof):
+            # Check that the Proof of Work is correct
+            if not self.valid_proof(last_block['proof'], block['proof']):
                 return False
 
             last_block = block
+            current_index += 1
 
         return True
 
