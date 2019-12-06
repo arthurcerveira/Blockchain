@@ -1,7 +1,6 @@
 # Blockchain
 
 <a target="_blank" href="https://www.python.org/downloads/" title="Python version"><img src="https://img.shields.io/badge/python-%3E=_3.6-green.svg"></a>
-<a target="_blank" href="LICENSE" title="License: MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg"></a>
 
 A simple blockchain implemented in Python with Flask.
 
@@ -38,8 +37,3 @@ The blockchain structure was implemented with built-in Python tools. The network
 ## Motivation
 
 This project was created to learn more about the Blockchain architecture and study the use of cryptography in a real application.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details<br>
-MIT © Arthur Cerveira
