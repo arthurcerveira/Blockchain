@@ -12,9 +12,9 @@ These instructions will get you a copy of the project up and running on your mac
 
 For running this project you need a Python 3.6 or higher and pip3.
 
-### Intructions
+### Instructions
 
-For installing you need to clone the repository and install the requirements
+For installing you need git to clone the repository and install the requirements
 
 ```
 git clone https://github.com/arthurcerveira/Blockchain.git
