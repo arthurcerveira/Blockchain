@@ -6,13 +6,31 @@ A simple blockchain implemented in Python with Flask.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your machine.
+You can either run the application with a docker container or on your machine.
 
-### Prerequisites
+### Running the application with docker
+
+#### Prerequisites
+
+The only tool needed to run this container is Docker.
+
+#### Instructions
+
+To run the image for this docker container, run the following command
+
+```
+docker container run -d -p 5000:<port> arthurcerveira/blockchain
+```
+
+The port argument represents which port will be exposed to the host.
+
+### Running the application on your machine
+
+#### Prerequisites
 
 For running this project you need a Python 3.6 or higher and pip3.
 
-### Instructions
+#### Instructions
 
 For installing you need git to clone the repository and install the requirements
 
@@ -27,10 +45,13 @@ To create a node you can run the following command
 ```
 python3 network.py <port>
 ```
+
 The port argument represents which port will be accessed, the default value is 5000.
 
 ## Built With
+
 The blockchain structure was implemented with built-in Python tools. The network was implemented with the web framework Flask and the requests library.
+
 - [Flask](https://palletsprojects.com/p/flask/) - The Python micro framework for building web applications
 - [requests](https://pypi.org/project/requests/) - An elegant and simple HTTP library for Python
 
